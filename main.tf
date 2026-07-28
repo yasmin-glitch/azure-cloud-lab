@@ -1,10 +1,10 @@
 # 1. resource Group
 resource "azurerm_resource_group" "rg" {
-    name = var.resource_group_name
+    name = terraform.workspace == "default" ? "rg-networking-lab" : "rg-${terraform.workspace}-networking-lab"
     location = var.location
 
     tags = {
-        Enviroment = "Lab"
+        Enviroment = terraform.workspace
         ManagedBy = "Terraform"
     }
 }
