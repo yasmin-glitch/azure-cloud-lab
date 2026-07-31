@@ -4,6 +4,6 @@ output "resource_group_name" {
 }
 
 output "hub_vnet_id" {
-    value = azurerm_virtual_network.hub.id
+    value = module.hub.vnet_id
     description = "The resource ID of the Hub VNet"
 }
