@@ -52,11 +52,17 @@ jobs:
       - name: Terraform Validate
         run: terraform validate -no-color
 
-      # 8. Generate execution plan (Runs on both PRs and Pushes)
+      # 8. Security Vulnerability Scan
+      - name: Run tfsec Security Scan
+        uses: aquasecurity/tfsec-action@v1.0.3
+        with:
+          soft_fail: false
+
+      # 9. Generate execution plan
       - name: Terraform Plan
         run: terraform plan -no-color
 
-      # 9. Apply changes ONLY when code is merged/pushed directly to main
+      # 10. Apply changes ONLY when pushed directly to main
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -no-color
