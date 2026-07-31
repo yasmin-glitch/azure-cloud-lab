@@ -1,11 +1,11 @@
-name: "Terraform Destroy"
+name: "Terraform Destroy (Manual Teardown)"
 
 on:
   workflow_dispatch:
 
 jobs:
-  terraform-destroy:
-    name: "Manual Infrastructure Teardown"
+  destroy:
+    name: "Teardown Azure Infrastructure"
     runs-on: ubuntu-latest
 
     env:
@@ -32,7 +32,7 @@ jobs:
         run: terraform init
 
       - name: Select Workspace
-        run: terraform workspace select dev
+        run: terraform workspace select dev || terraform workspace new dev
 
       - name: Terraform Destroy
         run: terraform destroy -auto-approve -no-color
