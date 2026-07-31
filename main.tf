@@ -4,8 +4,9 @@ resource "azurerm_resource_group" "rg" {
   location = var.location
 
   tags = {
-    Environment = terraform.workspace
-    ManagedBy   = "Terraform"
+    Enviroment = terraform.workspace
+    ManagedBy  = "Terraform"
+    TestedBy   = "GitHubActions"
   }
 }
 
