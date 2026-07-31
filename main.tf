@@ -6,7 +6,7 @@ resource "azurerm_resource_group" "rg" {
   tags = {
     Enviroment = terraform.workspace
     ManagedBy  = "Terraform"
-    TestedBy    = "GitHubActions"
+    TestedBy   = "GitHubActions"
   }
 }
 
