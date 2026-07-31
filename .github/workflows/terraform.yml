@@ -13,20 +13,27 @@ jobs:
     name: "Terraform Execution"
     runs-on: ubuntu-latest
 
+    # Pass Azure authentication secrets to Terraform's AzureRM Provider
+    env:
+      ARM_CLIENT_ID: ${{ toJson(secrets.AZURE_CREDENTIALS) != '' && fromJson(secrets.AZURE_CREDENTIALS).clientId }}
+      ARM_CLIENT_SECRET: ${{ toJson(secrets.AZURE_CREDENTIALS) != '' && fromJson(secrets.AZURE_CREDENTIALS).clientSecret }}
+      ARM_SUBSCRIPTION_ID: ${{ toJson(secrets.AZURE_CREDENTIALS) != '' && fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
+      ARM_TENANT_ID: ${{ toJson(secrets.AZURE_CREDENTIALS) != '' && fromJson(secrets.AZURE_CREDENTIALS).tenantId }}
+
     steps:
       # 1. Checkout repository code
       - name: Checkout Code
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v4
 
       # 2. Log in to Azure using stored GitHub Secrets
       - name: Azure Login
-        uses: azure/login@v2.2.0
+        uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       # 3. Setup Terraform CLI on the GitHub runner
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3.1.2
+        uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.5.0
 
