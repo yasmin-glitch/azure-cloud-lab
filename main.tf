@@ -1,47 +1,47 @@
 # 1. resource Group
 resource "azurerm_resource_group" "rg" {
-    name = terraform.workspace == "default" ? "rg-networking-lab" : "rg-${terraform.workspace}-networking-lab"
-    location = var.location
+  name     = terraform.workspace == "default" ? "rg-networking-lab" : "rg-${terraform.workspace}-networking-lab"
+  location = var.location
 
-    tags = {
-        Enviroment = terraform.workspace
-        ManagedBy = "Terraform"
-    }
+  tags = {
+    Enviroment = terraform.workspace
+    ManagedBy  = "Terraform"
+  }
 }
 
 # 2. Hub Virtual Network & Subnet
 module "hub" {
-    source = "./modules/vnet"
-    vnet_name = "vnet-hub-${terraform.workspace}"
-    location = azurerm_resource_group.rg.location
-    resource_group_name = azurerm_resource_group.rg.name
-    address_space = var.hub_address_space
+  source              = "./modules/vnet"
+  vnet_name           = "vnet-hub-${terraform.workspace}"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  address_space       = var.hub_address_space
 
-    tags = {
+  tags = {
     Environment = terraform.workspace
     ManagedBy   = "Terraform"
   }
 }
 
 resource "azurerm_subnet" "hub_shared" {
-    name = "SharedServicesSubnet"
-    resource_group_name = azurerm_resource_group.rg.name
-    virtual_network_name = module.hub.vnet_name
-    address_prefixes = ["10.0.10.0/24"]
+  name                 = "SharedServicesSubnet"
+  resource_group_name  = azurerm_resource_group.rg.name
+  virtual_network_name = module.hub.vnet_name
+  address_prefixes     = ["10.0.10.0/24"]
 }
 
 # 3. Production Spoke Virtual Network & Subnet
 module "prod" {
-    source = "./modules/vnet"
-    vnet_name = "vnet-prod-${terraform.workspace}"
-    location = azurerm_resource_group.rg.location
-    resource_group_name = azurerm_resource_group.rg.name
-    address_space = var.prod_address_space
-    
-    tags = {
-        Environment = terraform.workspace
-        ManagedBy   = "Terraform"
-    }
+  source              = "./modules/vnet"
+  vnet_name           = "vnet-prod-${terraform.workspace}"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  address_space       = var.prod_address_space
+
+  tags = {
+    Environment = terraform.workspace
+    ManagedBy   = "Terraform"
+  }
 }
 
 resource "azurerm_subnet" "prod_app" {
@@ -53,16 +53,16 @@ resource "azurerm_subnet" "prod_app" {
 
 # 4. Development Spoke Virtual Network & Subnet
 module "dev" {
-    source = "./modules/vnet"
-    vnet_name = "vnet-dev-${terraform.workspace}"
-    location = azurerm_resource_group.rg.location
-    resource_group_name = azurerm_resource_group.rg.name
-    address_space = var.dev_address_space
-    
-    tags = {
-        Environment = terraform.workspace
-        ManagedBy   = "Terraform"
-    }
+  source              = "./modules/vnet"
+  vnet_name           = "vnet-dev-${terraform.workspace}"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  address_space       = var.dev_address_space
+
+  tags = {
+    Environment = terraform.workspace
+    ManagedBy   = "Terraform"
+  }
 }
 
 resource "azurerm_subnet" "dev_app" {
@@ -74,12 +74,12 @@ resource "azurerm_subnet" "dev_app" {
 
 # 5. VNet Peerings: hub <-> Prod Spoke
 resource "azurerm_virtual_network_peering" "hub_to_prod" {
-    name = "hub-to-prod-peer"
-    resource_group_name = azurerm_resource_group.rg.name
-    virtual_network_name = module.hub.vnet_name
-    remote_virtual_network_id = module.prod.vnet_id
-    allow_virtual_network_access = true
-    allow_forwarded_traffic = true
+  name                         = "hub-to-prod-peer"
+  resource_group_name          = azurerm_resource_group.rg.name
+  virtual_network_name         = module.hub.vnet_name
+  remote_virtual_network_id    = module.prod.vnet_id
+  allow_virtual_network_access = true
+  allow_forwarded_traffic      = true
 }
 
 resource "azurerm_virtual_network_peering" "prod_to_hub" {
