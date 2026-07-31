@@ -14,19 +14,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout the repository code
+      # 1. Checkout repository code
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       # 2. Log in to Azure using stored GitHub Secrets
       - name: Azure Login
-        uses: azure/login@v2
+        uses: azure/login@v2.2.0
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       # 3. Setup Terraform CLI on the GitHub runner
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@v3.1.2
         with:
           terraform_version: 1.5.0
 
