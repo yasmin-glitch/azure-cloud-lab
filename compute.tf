@@ -17,7 +17,7 @@ resource "azurerm_network_interface" "edge_nic" {
 
   ip_configuration {
     name                          = "internal"
-    subnet_id                     = azurerm_subnet.subnets["subnet1"].id
+    subnet_id                     = azurerm_subnet.hub_shared.id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.edge_ip.id
   }
@@ -34,7 +34,7 @@ resource "azurerm_linux_virtual_machine" "edge_vm" {
   admin_username      = "azureuser"
 
   network_interface_ids = [
-    azurearm_network_interface.edge_nic.id,
+    azurerm_network_interface.edge_nic.id,
   ]
 
   # Cloud-init script: Automatically installs Docker on boot
