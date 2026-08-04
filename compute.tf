@@ -1,5 +1,5 @@
 # 1. Public IP for the Edge Gateway
-resource "azurearm_public_ip" "edge_ip" {
+resource "azurerm_public_ip" "edge_ip" {
   name                = "pip-edge-gw-dev"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
@@ -10,23 +10,23 @@ resource "azurearm_public_ip" "edge_ip" {
 }
 
 # 2. Network Interface Card (NIC) inside subnet 1
-resource "azurearm_network_interface" "edge_nic" {
+resource "azurerm_network_interface" "edge_nic" {
   name                = "nic-edge-gw-dev"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 
   ip_configuration {
     name                          = "internal"
-    subnet_id                     = azurearm_subnet.subnets["subnet1"].id
+    subnet_id                     = azurerm_subnet.subnets["subnet1"].id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurearm_public_ip.edge_ip.id
+    public_ip_address_id          = azurerm_public_ip.edge_ip.id
   }
 
   tags = local.common_tags
 }
 
 # 3. Linux Virtual Machine (Edge Gateway Node)
-resource "azurearm_linux_virtual_machine" "edge_vm" {
+resource "azurerm_linux_virtual_machine" "edge_vm" {
   name                = "vm-edge-gw-dev"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name

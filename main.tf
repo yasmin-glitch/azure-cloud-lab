@@ -10,6 +10,14 @@ resource "azurerm_resource_group" "rg" {
   }
 }
 
+locals {
+  common_tags = {
+    Environment = "dev"
+    Project     = "azure-cloud-lab"
+    ManagedBy   = "Terraform"
+  }
+}
+
 # 2. Hub Virtual Network & Subnet
 module "hub" {
   source              = "./modules/vnet"
